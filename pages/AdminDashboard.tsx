@@ -59,26 +59,26 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-6 h-16 flex justify-between items-center">
+        <div className="container mx-auto px-4 md:px-6 h-16 flex justify-between items-center">
             <div className="flex items-center gap-3">
                 <LayoutDashboard className="text-primary-400" />
-                <span className="font-bold text-xl tracking-tight">UrbanSpark <span className="text-slate-400 font-normal text-sm ml-2">Admin Panel</span></span>
+                <span className="font-bold text-lg md:text-xl tracking-tight">UrbanSpark <span className="text-slate-400 font-normal text-xs md:text-sm ml-2 hidden sm:inline">Admin Panel</span></span>
             </div>
             <button onClick={handleLogout} className="flex items-center gap-2 hover:text-red-400 transition-colors text-sm font-medium">
-                <LogOut size={16} /> Logout
+                <LogOut size={16} /> <span className="hidden sm:inline">Logout</span>
             </button>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 md:px-6 py-8">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-            {/* Stats Cards ... (Keep existing layout but updated logic) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
+            {/* Stats Cards */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="text-slate-500 text-sm font-medium">Total Revenue</p>
-                        <h3 className="text-3xl font-bold text-slate-900">${totalRevenue.toLocaleString()}</h3>
+                        <h3 className="text-2xl md:text-3xl font-bold text-slate-900">${totalRevenue.toLocaleString()}</h3>
                     </div>
                     <div className="p-3 bg-green-50 rounded-xl text-green-600"><DollarSign size={20} /></div>
                 </div>
@@ -87,7 +87,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="text-slate-500 text-sm font-medium">Pending Requests</p>
-                        <h3 className="text-3xl font-bold text-slate-900">{pendingCount}</h3>
+                        <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{pendingCount}</h3>
                     </div>
                     <div className="p-3 bg-yellow-50 rounded-xl text-yellow-600"><Clock size={20} /></div>
                 </div>
@@ -96,7 +96,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="text-slate-500 text-sm font-medium">Completed Jobs</p>
-                        <h3 className="text-3xl font-bold text-slate-900">{completedCount}</h3>
+                        <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{completedCount}</h3>
                     </div>
                     <div className="p-3 bg-blue-50 rounded-xl text-blue-600"><CheckCircle size={20} /></div>
                 </div>
@@ -105,7 +105,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="text-slate-500 text-sm font-medium">Total Bookings</p>
-                        <h3 className="text-3xl font-bold text-slate-900">{bookings.length}</h3>
+                        <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{bookings.length}</h3>
                     </div>
                     <div className="p-3 bg-purple-50 rounded-xl text-purple-600"><Users size={20} /></div>
                 </div>
@@ -113,7 +113,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-t-2xl border border-slate-200 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="bg-white rounded-t-2xl border border-slate-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 w-full md:w-auto">
                 <Search size={18} className="text-slate-400" />
                 <input 
@@ -125,12 +125,12 @@ export const AdminDashboard: React.FC = () => {
                 />
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar">
                 {(['All', 'Pending', 'Confirmed', 'Completed', 'Cancelled'] as const).map(s => (
                     <button 
                         key={s}
                         onClick={() => setFilter(s)}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === s ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${filter === s ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
                     >
                         {s}
                     </button>
@@ -140,7 +140,7 @@ export const AdminDashboard: React.FC = () => {
 
         {/* Table */}
         <div className="bg-white border-x border-b border-slate-200 overflow-x-auto rounded-b-2xl shadow-sm">
-            <table className="w-full text-left">
+            <table className="w-full text-left min-w-[800px]">
                 <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
                     <tr>
                         <th className="px-6 py-4">Booking ID</th>

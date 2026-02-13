@@ -63,7 +63,7 @@ export const GalleryPage: React.FC = () => {
             </span>
             <h1 className="text-4xl md:text-5xl font-heading font-bold text-slate-900 mb-6">Transformation Gallery</h1>
             <p className="text-lg text-slate-600">
-                Witness the power of Urban Spark. Drag your mouse over the images to see the Before & After results.
+                Witness the power of Urban Spark. Tap or hover over the images to see the Before & After results.
             </p>
           </motion.div>
         </div>
@@ -99,7 +99,7 @@ export const GalleryPage: React.FC = () => {
                 {/* Hover Instruction Overlay (Disappears on hover) */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 opacity-0 group-hover:opacity-0 transition-opacity duration-500">
                     <div className="bg-black/30 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium border border-white/20">
-                        Hover to Clean
+                        Tap / Hover to Clean
                     </div>
                 </div>
               </div>

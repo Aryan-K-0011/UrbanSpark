@@ -120,29 +120,29 @@ export const BookingWizard: React.FC = () => {
 
   if (completed) {
     return (
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-12 text-center">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center mx-4 md:mx-auto">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <Check size={40} className="text-green-600" />
         </div>
-        <h2 className="text-3xl font-heading font-bold text-slate-900 mb-2">Booking Confirmed!</h2>
+        <h2 className="text-2xl md:text-3xl font-heading font-bold text-slate-900 mb-2">Booking Confirmed!</h2>
         <p className="text-slate-500 mb-4">Your Booking ID</p>
-        <div className="bg-slate-100 py-3 px-6 rounded-lg inline-block font-mono text-xl font-bold tracking-widest text-slate-800 mb-6 border border-slate-200">
+        <div className="bg-slate-100 py-3 px-6 rounded-lg inline-block font-mono text-lg md:text-xl font-bold tracking-widest text-slate-800 mb-6 border border-slate-200">
             {bookingData.id}
         </div>
-        <p className="text-slate-600 mb-8">
+        <p className="text-slate-600 mb-8 text-sm md:text-base">
           Thank you, {bookingData.customerName}. We have sent a confirmation email to {bookingData.customerEmail}.
           You can track your service status using the ID above.
         </p>
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link 
               to="/track"
-              className="bg-slate-900 text-white px-8 py-3 rounded-xl font-semibold hover:bg-slate-800"
+              className="bg-slate-900 text-white px-8 py-3 rounded-xl font-semibold hover:bg-slate-800 w-full sm:w-auto"
             >
               Track Order
             </Link>
             <button 
               onClick={() => window.location.reload()}
-              className="bg-white border border-slate-200 text-slate-700 px-8 py-3 rounded-xl font-semibold hover:bg-slate-50"
+              className="bg-white border border-slate-200 text-slate-700 px-8 py-3 rounded-xl font-semibold hover:bg-slate-50 w-full sm:w-auto"
             >
               Book Another
             </button>
@@ -172,7 +172,7 @@ export const BookingWizard: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row min-h-[500px]">
+      <div className="flex flex-col lg:flex-row min-h-[500px]">
         {/* Main Content Area */}
         <div className="flex-1 p-6 md:p-10">
           <AnimatePresence mode="wait">
@@ -188,9 +188,9 @@ export const BookingWizard: React.FC = () => {
               >
                 {!selectedServiceId ? (
                     <>
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                             <h2 className="text-2xl font-heading font-bold">Add Services</h2>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 {['All', ...Object.values(ServiceCategory)].map(cat => (
                                     <button
                                         key={cat}
@@ -246,7 +246,7 @@ export const BookingWizard: React.FC = () => {
                                             <div className="text-2xl font-bold text-slate-900">${pkg.price}</div>
                                             <button 
                                                 onClick={() => addToCart(pkg.id)}
-                                                className="mt-2 bg-slate-900 text-white text-xs px-4 py-2 rounded-lg font-bold hover:bg-slate-800 transition-colors flex items-center gap-2"
+                                                className="mt-2 bg-slate-900 text-white text-xs px-4 py-2 rounded-lg font-bold hover:bg-slate-800 transition-colors flex items-center gap-2 ml-auto"
                                             >
                                                 <Plus size={14} /> Add
                                             </button>
@@ -287,7 +287,7 @@ export const BookingWizard: React.FC = () => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-3">Select Time</label>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM'].map((t) => (
                                 <button
                                     key={t}
@@ -386,7 +386,7 @@ export const BookingWizard: React.FC = () => {
               >
                 <h2 className="text-2xl font-heading font-bold mb-6">Payment Method</h2>
                 
-                <div className="flex gap-4 mb-8">
+                <div className="flex flex-col sm:flex-row gap-4 mb-8">
                     <button 
                         onClick={() => setBookingData({...bookingData, paymentMethod: 'Online'})}
                         className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${
@@ -476,7 +476,7 @@ export const BookingWizard: React.FC = () => {
         </div>
 
         {/* Sidebar Summary (Cart) */}
-        <div className="w-full md:w-80 bg-slate-50 border-l border-slate-100 p-6 flex flex-col">
+        <div className="w-full lg:w-80 bg-slate-50 border-t lg:border-t-0 lg:border-l border-slate-100 p-6 flex flex-col">
             <h3 className="font-heading font-bold text-lg mb-4 text-slate-900">Booking Summary</h3>
             
             <div className="flex-1 overflow-y-auto max-h-[300px] mb-4 space-y-3 custom-scrollbar">
@@ -537,7 +537,7 @@ export const BookingWizard: React.FC = () => {
                         (step === 4 && bookingData.paymentMethod === 'Online' && !cardNumber) ||
                         loading || paymentProcessing
                     }
-                    className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20"
                 >
                     {loading || paymentProcessing ? <Loader2 className="animate-spin" size={20} /> : (step === 4 ? (bookingData.paymentMethod === 'Online' ? `Pay $${(cartTotal * 1.05).toFixed(2)}` : 'Confirm Booking') : 'Continue')}
                 </button>
