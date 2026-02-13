@@ -4,6 +4,7 @@ import { Check, ChevronRight, Calendar, User, ArrowLeft, Loader2, Plus, Trash2, 
 import { SERVICES } from '../constants';
 import { ServiceCategory, BookingState, CartItem } from '../types';
 import { Link } from 'react-router-dom';
+import { bookingService } from '../services/bookingService';
 
 export const BookingWizard: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -69,6 +70,28 @@ export const BookingWizard: React.FC = () => {
     setBookingData({ ...bookingData, customerPhone: val });
   };
 
+  const handleReset = () => {
+    setStep(1);
+    setLoading(false);
+    setCompleted(false);
+    setCart([]);
+    setActiveCategory('All');
+    setSelectedServiceId(null);
+    setBookingData({
+        date: '',
+        time: '',
+        customerName: '',
+        customerEmail: '',
+        customerPhone: '',
+        address: '',
+        paymentMethod: 'Online'
+    });
+    setPaymentProcessing(false);
+    setCardNumber('');
+    setCardExpiry('');
+    setCardCVC('');
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     
@@ -102,9 +125,8 @@ export const BookingWizard: React.FC = () => {
         createdAt: new Date().toISOString()
     };
 
-    // Save to LocalStorage (Simulating Database)
-    const existingBookings = JSON.parse(localStorage.getItem('urban_spark_bookings') || '[]');
-    localStorage.setItem('urban_spark_bookings', JSON.stringify([newBooking, ...existingBookings]));
+    // Use Centralized Service (Supports Firebase or LocalStorage)
+    await bookingService.createBooking(newBooking);
 
     setLoading(false);
     setCompleted(true);
@@ -141,7 +163,7 @@ export const BookingWizard: React.FC = () => {
               Track Order
             </Link>
             <button 
-              onClick={() => window.location.reload()}
+              onClick={handleReset}
               className="bg-white border border-slate-200 text-slate-700 px-8 py-3 rounded-xl font-semibold hover:bg-slate-50 w-full sm:w-auto"
             >
               Book Another

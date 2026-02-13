@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Package, Check, Clock, Calendar } from 'lucide-react';
 import { BookingState } from '../types';
+import { bookingService } from '../services/bookingService';
 
 export const TrackBooking: React.FC = () => {
     const [id, setId] = useState('');
@@ -12,14 +13,16 @@ export const TrackBooking: React.FC = () => {
         setError('');
         setResult(null);
 
-        const bookings: BookingState[] = JSON.parse(localStorage.getItem('urban_spark_bookings') || '[]');
-        const found = bookings.find(b => b.id?.toUpperCase() === id.toUpperCase());
-
-        if (found) {
-            setResult(found);
-        } else {
-            setError('Booking ID not found. Please check and try again.');
-        }
+        // Subscribe briefly to get latest data
+        const unsubscribe = bookingService.subscribe((bookings) => {
+            const found = bookings.find(b => b.id?.toUpperCase() === id.toUpperCase());
+            if (found) {
+                setResult(found);
+            } else {
+                setError('Booking ID not found. Please check and try again.');
+            }
+            unsubscribe(); // Detach immediately after fetch for this use case
+        });
     };
 
     const getStepStatus = (step: number, currentStatus: string) => {

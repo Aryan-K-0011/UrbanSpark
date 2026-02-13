@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookingState, BookingStatus } from '../types';
-import { LayoutDashboard, LogOut, CheckCircle, Clock, XCircle, Search, DollarSign, Users, Calendar, MapPin, Phone, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { LayoutDashboard, LogOut, CheckCircle, Clock, XCircle, Search, DollarSign, Users, Calendar, MapPin, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { bookingService } from '../services/bookingService';
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -18,10 +19,12 @@ export const AdminDashboard: React.FC = () => {
       return;
     }
 
-    const stored = localStorage.getItem('urban_spark_bookings');
-    if (stored) {
-        setBookings(JSON.parse(stored));
-    }
+    // Real-time subscription to bookings
+    const unsubscribe = bookingService.subscribe((data) => {
+        setBookings(data);
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -29,10 +32,8 @@ export const AdminDashboard: React.FC = () => {
     navigate('/');
   };
 
-  const updateStatus = (id: string, newStatus: BookingStatus) => {
-    const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
-    setBookings(updated);
-    localStorage.setItem('urban_spark_bookings', JSON.stringify(updated));
+  const handleStatusChange = async (id: string, newStatus: BookingStatus) => {
+    await bookingService.updateStatus(id, newStatus);
   };
 
   const filteredBookings = bookings
@@ -149,7 +150,7 @@ export const AdminDashboard: React.FC = () => {
                         <th className="px-6 py-4">Date/Time</th>
                         <th className="px-6 py-4">Total</th>
                         <th className="px-6 py-4">Status</th>
-                        <th className="px-6 py-4 text-right">Actions</th>
+                        <th className="px-6 py-4 text-right">Update Status</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -191,24 +192,17 @@ export const AdminDashboard: React.FC = () => {
                                         {booking.status}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex justify-end gap-2">
-                                        {booking.status === 'Pending' && (
-                                            <button onClick={() => updateStatus(booking.id!, 'Confirmed')} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Confirm">
-                                                <CheckCircle size={18} />
-                                            </button>
-                                        )}
-                                        {booking.status !== 'Completed' && booking.status !== 'Cancelled' && (
-                                            <button onClick={() => updateStatus(booking.id!, 'Completed')} className="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="Mark Complete">
-                                                <CheckCircle size={18} fill="currentColor" className="text-white" />
-                                            </button>
-                                        )}
-                                        {booking.status !== 'Cancelled' && (
-                                            <button onClick={() => updateStatus(booking.id!, 'Cancelled')} className="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Cancel">
-                                                <XCircle size={18} />
-                                            </button>
-                                        )}
-                                    </div>
+                                <td className="px-6 py-4 text-right">
+                                    <select 
+                                        value={booking.status}
+                                        onChange={(e) => handleStatusChange(booking.id!, e.target.value as BookingStatus)}
+                                        className="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer hover:border-primary-400 transition-colors shadow-sm"
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
                                 </td>
                             </tr>
                             <AnimatePresence>
